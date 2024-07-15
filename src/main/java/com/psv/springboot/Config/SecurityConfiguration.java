@@ -13,36 +13,36 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((requests)->requests
-                        .requestMatchers("/registration**","/js/**","/css/**","/img/**").permitAll()
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/registration**", "/js/**", "/css/**", "/img/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin((form)->form
+                .formLogin((form) -> form
                         .loginPage("/login")
                         .permitAll()
                 )
-                .logout((logout)->logout
+                .logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 );
         return http.build();
-
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth)throws Exception{
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 }
